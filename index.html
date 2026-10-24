@@ -6,86 +6,64 @@
   <title>Afiyet Döner Kebap</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root { --primary: #E85D04; --primary-dark: #C2410C; --primary-soft: #FFF7ED; --bg: #FAF7F2; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B6560; --border: #EDE8E1; --radius: 18px; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    :root { --primary: #E85D04; --primary-dark: #C2410C; --bg: #FAF7F2; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B6560; --border: #EDE8E1; --radius: 18px; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, sans-serif; }
     body { background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
     
-    /* АНИМАЦИИ */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     .screen { display: none; } 
     .screen.active { display: block; animation: fadeUp 0.3s ease forwards; }
     
-    /* ШАПКА */
-    .header { background: var(--card); padding: 14px 18px; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .header h1 { font-size: 18px; font-weight: 800; color: var(--primary); }
-
-    /* МЕНЮ */
-    .hero { background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 22px 20px 28px; border-radius: 0 0 28px 28px; animation: scaleIn 0.4s ease; }
+    .hero { background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 22px 20px 28px; border-radius: 0 0 28px 28px; }
     .hero h1 { font-size: 24px; font-weight: 800; }
     .cats { display: flex; gap: 8px; padding: 16px 16px 6px; overflow-x: auto; scrollbar-width: none; }
-    .cats::-webkit-scrollbar { display: none; }
-    .cat { flex-shrink: 0; padding: 10px 18px; border-radius: 24px; border: 1.5px solid var(--border); background: var(--card); font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; transition: 0.2s; }
-    .cat.on { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+    .cat { flex-shrink: 0; padding: 10px 18px; border-radius: 24px; border: 1.5px solid var(--border); background: var(--card); font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
+    .cat.on { background: var(--primary); color: white; border-color: var(--primary); }
     .list { padding: 10px 16px 20px; display: grid; gap: 14px; }
     
-    /* КАРТОЧКИ */
-    .card { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); animation: fadeUp 0.4s ease backwards; align-items: center; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); align-items: center; }
     .card img { width: 100px; height: 100px; border-radius: 14px; object-fit: cover; }
     .card-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100px; }
     .card-name { font-size: 16px; font-weight: 700; }
-    .card-desc { font-size: 12px; color: var(--muted); line-height: 1.3; margin: 4px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-desc { font-size: 12px; color: var(--muted); margin: 4px 0; }
     .price { font-size: 16px; font-weight: 800; color: var(--primary); }
-    .plus { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 10px rgba(232,93,4,0.3); }
-    .plus:active { transform: scale(0.8); }
-
-    /* КОРЗИНА */
-    .cart-row { background: var(--card); border-radius: var(--radius); padding: 14px; display: flex; gap: 14px; box-shadow: var(--shadow); margin-bottom: 10px; animation: fadeUp 0.3s ease; align-items: center; }
-    .cart-row img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
-    .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: white; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); }
+    .plus { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     
-    /* ФОРМА */
-    .form { padding: 16px; animation: fadeUp 0.3s; }
+    .cart-row { background: var(--card); border-radius: var(--radius); padding: 14px; display: flex; gap: 14px; box-shadow: var(--shadow); margin-bottom: 10px; align-items: center; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: white; font-size: 18px; cursor: pointer; }
+    
+    .form { padding: 16px; }
     .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
+    .field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
     .field input, .field textarea { width: 100%; padding: 15px; border: 1.5px solid var(--border); border-radius: 14px; font-size: 16px; outline: none; background: var(--card); }
-    .field input:focus, .field textarea:focus { border-color: var(--primary); }
-    .btn-main { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 15px rgba(232,93,4,0.2); }
-    .btn-main:active { transform: scale(0.95); }
+    .btn-main { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; }
     
-    /* ПРОФИЛЬ */
     .profile-head { background: linear-gradient(145deg, var(--primary), var(--primary-dark)); color: white; padding: 30px 20px; border-radius: 0 0 28px 28px; text-align: center; }
     .avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 12px; border: 3px solid rgba(255,255,255,0.4); }
     .menu-row { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; background: var(--card); }
-    .menu-row:active { background: var(--bg); }
 
-    /* НАВИГАЦИЯ */
     .nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 100; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: none; background: none; color: var(--muted); font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: none; background: none; color: var(--muted); font-size: 10px; font-weight: 700; }
     .nav-item.on { color: var(--primary); }
     .nav-icon { font-size: 22px; }
     
-    /* МОДАЛКИ */
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 200; backdrop-filter: blur(3px); }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
     .modal.show { display: flex; }
-    .modal-box { background: white; padding: 24px; border-radius: 24px 24px 0 0; width: 100%; animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-box { background: white; padding: 24px; border-radius: 24px 24px 0 0; width: 100%; max-height: 90vh; overflow-y: auto; }
     .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .edit-btn { background: #FEF3C7; color: #B45309; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
     .del-btn { background: #FEE2E2; color: #B91C1C; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
-  <!-- ЭКРАН МЕНЮ -->
   <div id="s-menu" class="screen active">
     <div class="hero"><h1>Afiyet Döner</h1><p style="opacity:0.8; font-size:14px; margin-top:4px;">Халяль · 9:00 – 00:00</p></div>
     <div class="cats" id="cats"></div>
     <div class="list" id="menu-list"></div>
   </div>
 
-  <!-- ЭКРАН КОРЗИНЫ -->
   <div id="s-cart" class="screen">
-    <div class="header"><h1>Корзина</h1></div>
+    <div class="hero" style="padding:15px 20px;"><h1>Корзина</h1></div>
     <div class="list" id="cart-list"></div>
     <div style="padding:16px;">
       <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:800; margin-bottom:15px;"><span>Итого:</span><span id="cart-total" style="color:var(--primary)">0 сум</span></div>
@@ -93,18 +71,16 @@
     </div>
   </div>
 
-  <!-- ЭКРАН ОФОРМЛЕНИЯ -->
   <div id="s-checkout" class="screen">
-    <div class="header"><button class="back" onclick="go('cart')">←</button><h1>Оформление</h1></div>
+    <div class="hero" style="padding:15px 20px;"><h1>Оформление</h1></div>
     <div class="form">
-      <div class="field"><label>Имя</label><input type="text" id="order-name" placeholder="Ваше имя" /></div>
-      <div class="field"><label>Телефон</label><input type="tel" id="order-phone" placeholder="+998 90 123 45 67" /></div>
-      <div class="field"><label>Адрес доставки</label><textarea id="order-address" rows="2" placeholder="Улица, дом, квартира"></textarea></div>
+      <div class="field"><label>Имя</label><input type="text" id="order-name" /></div>
+      <div class="field"><label>Телефон</label><input type="tel" id="order-phone" /></div>
+      <div class="field"><label>Адрес доставки</label><textarea id="order-address" rows="2"></textarea></div>
       <button class="btn-main" onclick="submitOrder()">Подтвердить заказ</button>
     </div>
   </div>
 
-  <!-- ЭКРАН ПРОФИЛЯ -->
   <div id="s-profile" class="screen">
     <div class="profile-head">
       <div class="avatar" id="prof-avatar">👤</div>
@@ -115,19 +91,17 @@
       <div class="menu-row" onclick="editProfile()">
         <span style="font-size:20px; margin-right:14px;">✏️</span> <span style="font-weight:600;">Редактировать профиль</span>
       </div>
-      <div class="menu-row" onclick="go('menu')">
-        <span style="font-size:20px; margin-right:14px;">🛍</span> <span style="font-weight:600;">Мои заказы</span>
-      </div>
-      <!-- СКРЫТАЯ АДМИНКА -->
       <div class="menu-row" style="justify-content:center; padding:30px; opacity:0.3;" onclick="openAdminLogin()">
         <span style="font-size:12px;">⚙️ Настройки</span>
       </div>
     </div>
   </div>
 
-  <!-- ЭКРАН АДМИНКИ -->
   <div id="s-admin" class="screen">
-    <div class="header"><h1>Админ-панель</h1><button class="back" onclick="go('profile')">✕</button></div>
+    <div class="hero" style="padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
+      <h1>Админ-панель</h1>
+      <button onclick="go('profile')" style="background:none; border:none; color:white; font-size:20px;">✕</button>
+    </div>
     <div class="list">
       <div style="display:flex; gap:10px; margin-bottom:10px;">
         <button class="btn-main" style="flex:1; padding:10px; font-size:14px;" onclick="switchAdminTab('orders')">Заказы</button>
@@ -138,21 +112,18 @@
     </div>
   </div>
 
-  <!-- МОДАЛКА ВВОДА ПАРОЛЯ -->
   <div id="pass-modal" class="modal">
     <div class="modal-box" style="text-align:center;">
       <h2 style="margin-bottom: 15px;">Вход для Админа</h2>
       <input type="password" id="admin-pass" placeholder="Пароль" style="width:100%; padding:15px; border:2px solid var(--border); border-radius:12px; font-size:18px; text-align:center; margin-bottom:15px; outline:none;" />
       <button class="btn-main" onclick="checkAdminPass()">Войти</button>
-      <button style="background:none; border:none; color:var(--muted); margin-top:15px; font-size:14px;" onclick="document.getElementById('pass-modal').classList.remove('show')">Отмена</button>
     </div>
   </div>
 
-  <!-- МОДАЛКА РЕДАКТИРОВАНИЯ -->
   <div id="edit-modal" class="modal">
     <div class="modal-box">
       <h2 style="margin-bottom: 15px; text-align:center;">Блюдо</h2>
-      <div class="field"><label>Категория</label><input type="text" id="edit-cat" placeholder="Донеры" /></div>
+      <div class="field"><label>Категория</label><input type="text" id="edit-cat" /></div>
       <div class="field"><label>Название</label><input type="text" id="edit-name" /></div>
       <div class="field"><label>Описание</label><input type="text" id="edit-desc" /></div>
       <div class="field"><label>Цена (сум)</label><input type="number" id="edit-price" /></div>
@@ -162,7 +133,6 @@
     </div>
   </div>
 
-  <!-- НАВИГАЦИЯ -->
   <nav class="nav" id="nav">
     <button class="nav-item on" data-tab="menu" onclick="go('menu')"><span class="nav-icon">🍽</span>Меню</button>
     <button class="nav-item" data-tab="cart" onclick="go('cart')"><span class="nav-icon">🛒</span>Корзина</button>
@@ -174,8 +144,6 @@
     let menuData = {};
     let currentCat = '';
     const ADMIN_PASSWORD = "Afiyet2026!";
-
-    // Данные профиля сохраняются в памяти телефона
     let profile = JSON.parse(localStorage.getItem('afiyet_profile')) || { name: '', phone: '', address: '' };
 
     async function loadMenu() {
@@ -204,8 +172,8 @@
 
     function renderMenu() {
       const items = menuData[currentCat] || [];
-      document.getElementById('menu-list').innerHTML = items.map((item, index) => `
-        <div class="card" style="animation-delay: ${index * 0.1}s">
+      document.getElementById('menu-list').innerHTML = items.map(item => `
+        <div class="card">
           <img src="${item.img}" />
           <div class="card-body">
             <div><div class="card-name">${item.name_ru}</div><div class="card-desc">${item.desc_ru || ''}</div></div>
@@ -221,11 +189,9 @@
     function add(id, name, price) {
       if (!cart[id]) cart[id] = { name, price, qty: 0 };
       cart[id].qty++;
-      if(window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-      alert('Добавлено в корзину!');
+      alert('Добавлено!');
     }
 
-    // --- ПРОФИЛЬ ---
     function renderProfile() {
       document.getElementById('prof-name').innerText = profile.name || 'Гость';
       document.getElementById('prof-phone').innerText = profile.phone || 'Укажите номер';
@@ -237,18 +203,16 @@
       if (name !== null) {
         const phone = prompt('Ваш телефон:', profile.phone);
         if (phone !== null) {
-          const address = prompt('Ваш адрес по умолчанию:', profile.address);
+          const address = prompt('Ваш адрес:', profile.address);
           if (address !== null) {
             profile = { name, phone, address };
             localStorage.setItem('afiyet_profile', JSON.stringify(profile));
             renderProfile();
-            alert('Профиль обновлен!');
           }
         }
       }
     }
 
-    // --- КОРЗИНА ---
     function renderCart() {
       let html = '', total = 0;
       for (const id in cart) {
@@ -258,7 +222,7 @@
             <button class="qty-btn" onclick="changeQty(${id},-1)">-</button><b>${i.qty}</b><button class="qty-btn" onclick="changeQty(${id},1)">+</button>
           </div></div></div>`;
       }
-      document.getElementById('cart-list').innerHTML = html || '<p style="text-align:center; padding:40px; color:var(--muted); font-size:16px;">Корзина пуста</p>';
+      document.getElementById('cart-list').innerHTML = html || '<p style="text-align:center; padding:40px; color:var(--muted);">Корзина пуста</p>';
       document.getElementById('cart-total').innerText = total.toLocaleString() + ' сум';
     }
 
@@ -272,10 +236,9 @@
     function goCheckout() {
       if (Object.keys(cart).length === 0) return alert('Корзина пуста');
       if (!profile.name || !profile.phone) {
-        alert('Пожалуйста, сначала заполните профиль (Имя и Телефон в разделе Профиль).');
+        alert('Заполните профиль!');
         return go('profile');
       }
-      // Автозаполнение формы
       document.getElementById('order-name').value = profile.name;
       document.getElementById('order-phone').value = profile.phone;
       document.getElementById('order-address').value = profile.address || '';
@@ -287,8 +250,7 @@
       const phone = document.getElementById('order-phone').value.trim();
       const address = document.getElementById('order-address').value.trim();
       if (!name || !phone || !address) return alert('Заполните все поля');
-      if (Object.keys(cart).length === 0) return alert('Корзина пуста');
-
+      
       const items = [];
       let total = 0;
       for (const id in cart) { items.push(cart[id]); total += cart[id].price * cart[id].qty; }
@@ -300,16 +262,14 @@
       });
 
       if (res.ok) {
-        // Сохраняем данные для следующего раза
         profile = { name, phone, address };
         localStorage.setItem('afiyet_profile', JSON.stringify(profile));
         cart = {};
-        alert('Заказ успешно оформлен! Мы свяжемся с вами.');
+        alert('Заказ оформлен!');
         go('menu');
-      } else { alert('Ошибка сервера'); }
+      } else { alert('Ошибка'); }
     }
 
-    // --- АДМИНКА (СКРЫТАЯ) ---
     function openAdminLogin() {
       document.getElementById('pass-modal').classList.add('show');
       document.getElementById('admin-pass').value = '';
@@ -321,9 +281,7 @@
         go('admin');
         loadAdminOrders();
         loadAdminMenu();
-      } else {
-        alert('Неверный пароль!');
-      }
+      } else { alert('Неверный пароль!'); }
     }
 
     function switchAdminTab(tab) {
@@ -335,18 +293,16 @@
       const res = await fetch('/api/orders');
       const orders = await res.json();
       if (orders.length === 0) {
-        document.getElementById('admin-orders').innerHTML = '<p style="text-align:center; padding:20px; color:var(--muted);">Заказов пока нет</p>';
+        document.getElementById('admin-orders').innerHTML = '<p style="text-align:center; padding:20px;">Заказов пока нет</p>';
         return;
       }
       document.getElementById('admin-orders').innerHTML = orders.reverse().map(o => `
-        <div class="card" style="display:block; padding:16px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <b>Заказ #${o.id}</b> <span style="background:#FEF3C7; color:#B45309; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold;">Новый</span>
-          </div>
-          <div style="font-size:14px; color:var(--text); margin-bottom:5px;">👤 ${o.name}</div>
-          <div style="font-size:14px; color:var(--text); margin-bottom:5px;">📞 ${o.phone}</div>
-          <div style="font-size:14px; color:var(--text); margin-bottom:10px;">📍 ${o.address}</div>
-          <div style="font-weight:800; color:var(--primary); font-size:16px;">${o.total.toLocaleString()} сум</div>
+        <div class="card" style="display:block; padding:16px; margin-bottom:10px;">
+          <b>Заказ #${o.id}</b> <span style="background:#FEF3C7; color:#B45309; padding:4px 10px; border-radius:20px; font-size:11px; float:right;">Новый</span>
+          <div style="margin-top:10px; font-size:14px;">👤 ${o.name}</div>
+          <div style="margin-top:5px; font-size:14px;">📞 ${o.phone}</div>
+          <div style="margin-top:5px; font-size:14px;">📍 ${o.address}</div>
+          <div style="font-weight:800; color:var(--primary); font-size:16px; margin-top:10px;">${o.total.toLocaleString()} сум</div>
         </div>
       `).join('');
     }
@@ -356,4 +312,70 @@
       const menu = await res.json();
       let html = '';
       for (const cat in menu) {
-        html += `<h3 style="margin: 15px 0 10px; color: var(--primary); font-size:
+        html += `<h3 style="margin: 15px 0 10px; color: var(--primary); font-size:16px;">${cat}</h3>`;
+        menu[cat].forEach(item => {
+          html += `<div class="admin-item">
+            <div><div style="font-weight:bold; font-size:15px;">${item.name_ru}</div><div style="font-size:13px; color:var(--muted);">${item.price} сум</div></div>
+            <div>
+              <button class="edit-btn" onclick='openEditModal(${JSON.stringify(item).replace(/'/g, "&#39;")}, "${cat}")'>✏️</button>
+              <button class="del-btn" onclick="deleteItem(${item.id})">🗑</button>
+            </div>
+          </div>`;
+        });
+      }
+      html += `<button class="btn-main" style="margin-top:20px;" onclick="openEditModal(null, '')">+ Добавить блюдо</button>`;
+      document.getElementById('admin-menu').innerHTML = html;
+    }
+
+    function openEditModal(item, cat) {
+      document.getElementById('edit-modal').classList.add('show');
+      if (item) {
+        document.getElementById('edit-id').value = item.id;
+        document.getElementById('edit-cat').value = cat;
+        document.getElementById('edit-name').value = item.name_ru;
+        document.getElementById('edit-desc').value = item.desc_ru || '';
+        document.getElementById('edit-price').value = item.price;
+        document.getElementById('edit-img').value = item.img;
+      } else {
+        document.getElementById('edit-id').value = '';
+        document.getElementById('edit-cat').value = '';
+        document.getElementById('edit-name').value = '';
+        document.getElementById('edit-desc').value = '';
+        document.getElementById('edit-price').value = '';
+        document.getElementById('edit-img').value = '';
+      }
+    }
+
+    async function saveMenuItem() {
+      const id = document.getElementById('edit-id').value;
+      const data = {
+        id: id || null,
+        cat: document.getElementById('edit-cat').value.trim(),
+        name_ru: document.getElementById('edit-name').value.trim(),
+        desc_ru: document.getElementById('edit-desc').value.trim(),
+        price: parseInt(document.getElementById('edit-price').value),
+        img: document.getElementById('edit-img').value.trim()
+      };
+      if (!data.cat || !data.name_ru || !data.price) return alert('Заполните поля');
+      if (id) {
+        await fetch('/api/menu/edit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      } else {
+        await fetch('/api/menu/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      }
+      document.getElementById('edit-modal').classList.remove('show');
+      loadAdminMenu();
+      loadMenu();
+    }
+
+    async function deleteItem(id) {
+      if (confirm('Удалить?')) {
+        await fetch(`/api/menu/${id}`, { method: 'DELETE' });
+        loadAdminMenu();
+        loadMenu();
+      }
+    }
+
+    loadMenu();
+  </script>
+</body>
+</html>
