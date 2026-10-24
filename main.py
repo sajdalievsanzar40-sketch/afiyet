@@ -152,6 +152,5 @@ def get_menu():
     for r in rows: res.setdefault(r["cat"], []).append(dict(r))
     return res
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
-def root(): return FileResponse("static/index.html")
+def root(): return FileResponse("index.html")
