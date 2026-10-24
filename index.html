@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Afiyet</title>
+<title>Afiyet Döner</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{--p:#E85D04;--pd:#C2410C;--bg:#FAF7F2;--c:#FFF;--t:#1A1A1A;--m:#6B6560;--b:#EDE8E1;--r:20px;--s:0 4px 20px rgba(0,0,0,.06)}
@@ -63,118 +63,119 @@ body{background:var(--bg);color:var(--t);padding-bottom:90px;overflow-x:hidden}
 </head>
 <body>
 <div id="s-menu" class="screen active">
-<div class="hero"><h1 data-i18n="title">Afiyet Döner</h1><p data-i18n="subtitle" style="opacity:.85;font-size:14px;margin-top:6px">Халяль · 9:00 – 00:00</p><button class="lang-btn" onclick="changeLang()">RU</button></div>
-<div class="cats" id="cats"></div><div class="list" id="menu-list"></div>
+<div class="hero"><h1>Afiyet Döner</h1><p style="opacity:.85;font-size:14px;margin-top:6px">Халяль · 9:00 – 00:00</p><button class="lang-btn" onclick="changeLang()">RU</button></div>
+<div class="cats" id="cats"></div>
+<div class="list" id="menu-list"><p style="text-align:center;padding:20px;">Загрузка меню...</p></div>
 </div>
 <div id="s-cart" class="screen">
-<div class="hero" style="padding:20px;border-radius:0 0 24px 24px"><h1 style="font-size:20px" data-i18n="cart">Ваш заказ</h1></div>
+<div class="hero" style="padding:20px;border-radius:0 0 24px 24px"><h1 style="font-size:20px">Ваш заказ</h1></div>
 <div class="list" id="cart-list"></div><div id="upsell"></div>
-<div style="padding:16px"><div style="display:flex;justify-content:space-between;font-size:22px;font-weight:900;margin-bottom:20px"><span data-i18n="total">Итого:</span><span id="total" style="color:var(--p)">0 сум</span></div><button class="btn" onclick="checkout()" data-i18n="checkout">Оформить заказ</button></div>
+<div style="padding:16px"><div style="display:flex;justify-content:space-between;font-size:22px;font-weight:900;margin-bottom:20px"><span>Итого:</span><span id="total" style="color:var(--p)">0 сум</span></div><button class="btn" onclick="checkout()">Оформить заказ</button></div>
 </div>
 <div id="s-checkout" class="screen">
-<div class="hero" style="padding:20px;border-radius:0 0 24px 24px"><h1 style="font-size:20px" data-i18n="where">Куда доставить?</h1></div>
+<div class="hero" style="padding:20px;border-radius:0 0 24px 24px"><h1 style="font-size:20px">Куда доставить?</h1></div>
 <div class="form">
-<div class="field"><label data-i18n="name">Имя</label><input type="text" id="o-name"></div>
-<div class="field"><label data-i18n="phone">Телефон</label><input type="tel" id="o-phone"></div>
-<div class="field"><label data-i18n="address">Адрес</label><textarea id="o-addr" rows="2"></textarea></div>
-<button class="btn" onclick="submitOrder()" data-i18n="confirm">Подтвердить заказ</button>
+<div class="field"><label>Имя</label><input type="text" id="o-name"></div>
+<div class="field"><label>Телефон</label><input type="tel" id="o-phone"></div>
+<div class="field"><label>Адрес</label><textarea id="o-addr" rows="2"></textarea></div>
+<button class="btn" onclick="submitOrder()">Подтвердить заказ</button>
 </div>
 </div>
 <div id="s-success" class="screen">
-<div class="success"><div class="sicon">🎉</div><h1 style="font-size:28px;font-weight:900;margin-bottom:10px" data-i18n="accepted">Заказ принят!</h1><p style="color:var(--m);font-size:16px;margin-bottom:30px" data-i18n="cooking">Мы уже начали готовить.</p><button class="btn" style="max-width:250px" onclick="go('menu')" data-i18n="back">Вернуться в меню</button></div>
+<div class="success"><div class="sicon">🎉</div><h1 style="font-size:28px;font-weight:900;margin-bottom:10px">Заказ принят!</h1><p style="color:var(--m);font-size:16px;margin-bottom:30px">Мы уже начали готовить.</p><button class="btn" style="max-width:250px" onclick="go('menu')">Вернуться в меню</button></div>
 </div>
 <div id="s-profile" class="screen">
 <div class="ph"><div class="av" id="p-av">👤</div><div style="font-size:24px;font-weight:900" id="p-name">Гость</div><div style="font-size:15px;opacity:.9;margin-top:6px" id="p-phone">Укажите номер</div></div>
 <div style="margin-top:25px;background:var(--c);border-top:1px solid var(--b)">
-<div class="mr" onclick="editProfile()"><span class="mi">✏️</span><span style="font-weight:700" data-i18n="editProfile">Редактировать профиль</span></div>
-<div class="mr" onclick="go('orders')"><span class="mi">📦</span><span style="font-weight:700" data-i18n="myOrders">Мои заказы</span></div>
-<div class="mr" style="justify-content:center;padding:35px;opacity:.3" onclick="openAdmin()"><span style="font-size:12px;font-weight:600" data-i18n="forStaff">⚙️ Для сотрудников</span></div>
+<div class="mr" onclick="editProfile()"><span class="mi">✏️</span><span style="font-weight:700">Редактировать профиль</span></div>
+<div class="mr" onclick="go('orders')"><span class="mi">📦</span><span style="font-weight:700">Мои заказы</span></div>
+<div class="mr" style="justify-content:center;padding:35px;opacity:.3" onclick="openAdmin()"><span style="font-size:12px;font-weight:600">⚙️ Для сотрудников</span></div>
 </div>
 </div>
 <div id="s-orders" class="screen">
-<div class="hero" style="padding:20px;border-radius:0 0 24px 24px;display:flex;align-items:center;gap:10px"><button onclick="go('profile')" style="background:none;border:none;color:#fff;font-size:24px">←</button><h1 style="font-size:20px" data-i18n="myOrders">Мои заказы</h1></div>
+<div class="hero" style="padding:20px;border-radius:0 0 24px 24px;display:flex;align-items:center;gap:10px"><button onclick="go('profile')" style="background:none;border:none;color:#fff;font-size:24px">←</button><h1 style="font-size:20px">Мои заказы</h1></div>
 <div class="list" id="my-orders-list"></div>
 </div>
 <div id="s-admin" class="screen">
-<div class="hero" style="padding:20px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 24px 24px"><h1 style="font-size:20px" data-i18n="adminPanel">Админ-панель</h1><button onclick="go('profile')" style="background:none;border:none;color:#fff;font-size:24px">✕</button></div>
+<div class="hero" style="padding:20px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 24px 24px"><h1 style="font-size:20px">Админ-панель</h1><button onclick="go('profile')" style="background:none;border:none;color:#fff;font-size:24px">✕</button></div>
 <div class="list">
-<div style="display:flex;gap:10px;margin-bottom:10px"><button class="btn" style="flex:1;padding:14px;font-size:15px" onclick="switchTab('orders')" data-i18n="orders">Заказы</button><button class="btn" style="flex:1;padding:14px;font-size:15px;background:#fff;color:#1A1A1A;border:1px solid var(--b)" onclick="switchTab('menu')" data-i18n="menu">Меню</button></div>
+<div style="display:flex;gap:10px;margin-bottom:10px"><button class="btn" style="flex:1;padding:14px;font-size:15px" onclick="switchTab('orders')">Заказы</button><button class="btn" style="flex:1;padding:14px;font-size:15px;background:#fff;color:#1A1A1A;border:1px solid var(--b)" onclick="switchTab('menu')">Меню</button></div>
 <div id="admin-orders"></div><div id="admin-menu" style="display:none"></div>
 </div>
 </div>
 <div id="pass-modal" class="modal"><div class="mbox" style="text-align:center">
-<h2 style="margin-bottom:20px" data-i18n="adminLogin">Вход для Админа</h2>
+<h2 style="margin-bottom:20px">Вход для Админа</h2>
 <input type="password" id="pass" placeholder="Пароль" style="width:100%;padding:16px;border:2px solid var(--b);border-radius:16px;font-size:18px;text-align:center;margin-bottom:20px;outline:none">
-<button class="btn" onclick="checkPass()" data-i18n="login">Войти</button>
-<button style="background:none;border:none;color:var(--m);margin-top:20px;font-size:15px;font-weight:700" onclick="document.getElementById('pass-modal').classList.remove('show')" data-i18n="cancel">Отмена</button>
+<button class="btn" onclick="checkPass()">Войти</button>
+<button style="background:none;border:none;color:var(--m);margin-top:20px;font-size:15px;font-weight:700" onclick="document.getElementById('pass-modal').classList.remove('show')">Отмена</button>
 </div></div>
 <div id="edit-modal" class="modal"><div class="mbox">
-<h2 style="margin-bottom:20px;text-align:center" data-i18n="dish">Блюдо</h2>
-<div class="field"><label data-i18n="category">Категория</label><input type="text" id="e-cat"></div>
-<div class="field"><label data-i18n="name">Название</label><input type="text" id="e-name"></div>
-<div class="field"><label data-i18n="desc">Описание</label><input type="text" id="e-desc"></div>
-<div class="field"><label data-i18n="price">Цена</label><input type="number" id="e-price"></div>
-<div class="field"><label data-i18n="photo">Фото</label><input type="text" id="e-img"></div>
-<input type="hidden" id="e-id"><button class="btn" onclick="saveItem()" data-i18n="save">Сохранить</button>
+<h2 style="margin-bottom:20px;text-align:center">Блюдо</h2>
+<div class="field"><label>Категория</label><input type="text" id="e-cat"></div>
+<div class="field"><label>Название</label><input type="text" id="e-name"></div>
+<div class="field"><label>Описание</label><input type="text" id="e-desc"></div>
+<div class="field"><label>Цена</label><input type="number" id="e-price"></div>
+<div class="field"><label>Фото</label><input type="text" id="e-img"></div>
+<input type="hidden" id="e-id"><button class="btn" onclick="saveItem()">Сохранить</button>
 </div></div>
 <div id="prof-modal" class="modal"><div class="mbox">
-<h2 style="margin-bottom:20px;text-align:center" data-i18n="myData">Мои данные</h2>
-<div class="field"><label data-i18n="name">Имя</label><input type="text" id="u-name"></div>
-<div class="field"><label data-i18n="phone">Телефон</label><input type="tel" id="u-phone"></div>
-<div class="field"><label data-i18n="address">Адрес</label><input type="text" id="u-addr"></div>
-<button class="btn" onclick="saveProf()" data-i18n="save">Сохранить</button>
+<h2 style="margin-bottom:20px;text-align:center">Мои данные</h2>
+<div class="field"><label>Имя</label><input type="text" id="u-name"></div>
+<div class="field"><label>Телефон</label><input type="tel" id="u-phone"></div>
+<div class="field"><label>Адрес</label><input type="text" id="u-addr"></div>
+<button class="btn" onclick="saveProf()">Сохранить</button>
 </div></div>
 <nav class="nav" id="nav">
-<button class="ni on" data-tab="menu" onclick="go('menu')"><span class="nicon">🍽</span><span data-i18n="menu">Меню</span></button>
-<button class="ni" data-tab="cart" onclick="go('cart')"><span class="nicon">🛒</span><span data-i18n="cart">Корзина</span></button>
-<button class="ni" data-tab="profile" onclick="go('profile')"><span class="nicon">👤</span><span data-i18n="profile">Профиль</span></button>
+<button class="ni on" data-tab="menu" onclick="go('menu')"><span class="nicon">🍽</span>Меню</button>
+<button class="ni" data-tab="cart" onclick="go('cart')"><span class="nicon">🛒</span>Корзина</button>
+<button class="ni" data-tab="profile" onclick="go('profile')"><span class="nicon">👤</span>Профиль</button>
 </nav>
 <script>
+// Базовые товары на случай, если сервер не ответит
+const defaultMenu = {
+  "Донеры": [
+    { id: 1, name_ru: "Донер Кебаб", desc_ru: "Сочный донер", price: 45000, img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400" },
+    { id: 2, name_ru: "Донер Бургер", desc_ru: "Люля и сюзьма", price: 50000, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" }
+  ],
+  "Пиде": [
+    { id: 3, name_ru: "Пиде с мясом", desc_ru: "Турецкая лодочка", price: 55000, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" }
+  ],
+  "Салаты": [
+    { id: 4, name_ru: "Чобан", desc_ru: "Помидоры, огурцы", price: 35000, img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400" }
+  ]
+};
+
 const tg = window.Telegram?.WebApp;
 const tgUser = tg?.initDataUnsafe?.user;
 const uid = tgUser ? tgUser.id : 'guest'; 
 const profKey = 'prof_' + uid; 
 
-const i18n = {
-  ru: { title:"Afiyet Döner", subtitle:"Халяль · 9:00 – 00:00", cart:"Корзина", total:"Итого:", checkout:"Оформить заказ", where:"Куда доставить?", name:"Имя", phone:"Телефон", address:"Адрес", confirm:"Подтвердить заказ", accepted:"Заказ принят!", cooking:"Мы уже начали готовить.", back:"Вернуться в меню", guest:"Гость", phoneHint:"Укажите номер", editProfile:"Редактировать профиль", myOrders:"Мои заказы", forStaff:"⚙️ Для сотрудников", adminPanel:"Админ-панель", orders:"Заказы", menu:"Меню", adminLogin:"Вход для Админа", login:"Войти", cancel:"Отмена", dish:"Блюдо", category:"Категория", desc:"Описание", price:"Цена", photo:"Фото", save:"Сохранить", myData:"Мои данные", profile:"Профиль" },
-  uz: { title:"Afiyet Döner", subtitle:"Halol · 9:00 – 00:00", cart:"Savat", total:"Jami:", checkout:"Buyurtma berish", where:"Qayerga yetkazamiz?", name:"Ism", phone:"Telefon", address:"Manzil", confirm:"Buyurtmani tasdiqlash", accepted:"Buyurtma qabul qilindi!", cooking:"Tayyorlashni boshladik.", back:"Menyuga qaytish", guest:"Mehmon", phoneHint:"Raqamni kiriting", editProfile:"Profilni tahrirlash", myOrders:"Mening buyurtmalarim", forStaff:"⚙️ Xodimlar uchun", adminPanel:"Admin panel", orders:"Buyurtmalar", menu:"Menyu", adminLogin:"Admin kirish", login:"Kirish", cancel:"Bekor qilish", dish:"Taom", category:"Kategoriya", desc:"Tavsif", price:"Narx", photo:"Rasm", save:"Saqlash", myData:"Mening ma'lumotlarim", profile:"Profil" },
-  en: { title:"Afiyet Döner", subtitle:"Halal · 9:00 – 00:00", cart:"Cart", total:"Total:", checkout:"Checkout", where:"Where to deliver?", name:"Name", phone:"Phone", address:"Address", confirm:"Confirm order", accepted:"Order accepted!", cooking:"We have started cooking.", back:"Back to menu", guest:"Guest", phoneHint:"Enter number", editProfile:"Edit profile", myOrders:"My orders", forStaff:"⚙️ For staff", adminPanel:"Admin panel", orders:"Orders", menu:"Menu", adminLogin:"Admin login", login:"Login", cancel:"Cancel", dish:"Dish", category:"Category", desc:"Description", price:"Price", photo:"Photo", save:"Save", myData:"My data", profile:"Profile" }
-};
-
 let lang = localStorage.getItem('lang_'+uid) || 'ru';
-let cart={},menuData={},cat='',prof=JSON.parse(localStorage.getItem(profKey))||{name:'',phone:'',address:''};
+let cart={}, menuData={}, cat='', prof=JSON.parse(localStorage.getItem(profKey))||{name:'',phone:'',address:''};
 const PASS="Afiyet2026!";
-
-function t(key) { return i18n[lang][key] || key; }
-
-function applyLang() {
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t(el.getAttribute('data-i18n')); });
-  document.querySelector('.lang-btn').innerText = lang.toUpperCase();
-}
-
-function changeLang() {
-  lang = lang === 'ru' ? 'uz' : lang === 'uz' ? 'en' : 'ru';
-  localStorage.setItem('lang_'+uid, lang);
-  applyLang(); renderCats(); renderMenu();
-  if(document.getElementById('s-cart').classList.contains('active')) renderCart();
-  if(document.getElementById('s-profile').classList.contains('active')) renderProf();
-}
 
 async function loadMenu(){
   try {
     const r = await fetch('/api/menu'); 
+    if(!r.ok) throw new Error('Сервер не ответил');
     menuData = await r.json(); 
-    cat = Object.keys(menuData)[0]; 
-    renderCats(); 
-    renderMenu();
-  } catch(e) { console.error("Ошибка загрузки меню", e); }
+    if(!menuData || Object.keys(menuData).length === 0) menuData = defaultMenu;
+  } catch(e) {
+    console.warn("Сервер недоступен, грузим базовое меню", e);
+    menuData = defaultMenu;
+  }
+  cat = Object.keys(menuData)[0]; 
+  renderCats(); 
+  renderMenu();
 }
 
 function go(s){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.getElementById('s-'+s).classList.add('active');
   document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.dataset.tab===s));
-  if(s==='cart')renderCart(); if(s==='profile')renderProf(); if(s==='orders')loadMyOrders();
+  if(s==='cart')renderCart(); 
+  if(s==='profile')renderProf(); 
+  if(s==='orders')loadMyOrders();
 }
 
 function renderCats(){
@@ -187,7 +188,7 @@ function renderMenu(){
   const items=menuData[cat]||[];
   document.getElementById('menu-list').innerHTML=items.map((i,x)=>`
   <div class="card" style="animation-delay:${x*.08}s">
-  <img src="${i.img}">
+  <img src="${i.img}" onerror="this.src='https://via.placeholder.com/105?text=Food'">
   <div class="cb">
   <div><div class="cn">${i.name_ru}</div><div class="cd">${i.desc_ru||''}</div></div>
   <div style="display:flex;justify-content:space-between;align-items:center">
@@ -208,17 +209,16 @@ function renderCart(){
   <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
   <button class="qb" onclick="chQty(${id},-1)">-</button><b style="font-size:16px">${i.qty}</b><button class="qb" onclick="chQty(${id},1)">+</button>
   </div></div></div>`;}
-  document.getElementById('cart-list').innerHTML=h||`<p style="text-align:center;padding:40px;color:var(--m)">${t('cart')} empty</p>`;
+  document.getElementById('cart-list').innerHTML=h||`<p style="text-align:center;padding:40px;color:var(--m)">Корзина пуста</p>`;
   document.getElementById('total').innerText=t.toLocaleString()+' сум';
-  
   let up='';
   if(Object.keys(cart).length>0){
     let av=[];for(const c in menuData)menuData[c].forEach(i=>{if(!cart[i.id])av.push(i)});
     if(av.length>0){
       const r=av[Math.floor(Math.random()*av.length)];
-      up=`<div class="up"><div class="upt">🔥 ${lang==='ru'?'Добавить к заказу?':lang==='uz'?'Qo\'shasizmi?':'Add to order?'}</div>
+      up=`<div class="up"><div class="upt">🔥 Добавить к заказу?</div>
       <div class="upi"><img src="${r.img}" class="uimg"><div><div style="font-weight:800;font-size:14px">${r.name_ru}</div><div class="pr" style="font-size:13px">${r.price.toLocaleString()} сум</div></div>
-      <button class="upa" onclick="add(${r.id},'${r.name_ru}',${r.price});renderCart()">${lang==='ru'?'Добавить':lang==='uz'?'Qo\'shish':'Add'}</button></div></div>`;
+      <button class="upa" onclick="add(${r.id},'${r.name_ru}',${r.price});renderCart()">Добавить</button></div></div>`;
     }
   }
   document.getElementById('upsell').innerHTML=up;
@@ -239,14 +239,16 @@ async function submitOrder(){
   const n=document.getElementById('o-name').value.trim(),p=document.getElementById('o-phone').value.trim(),a=document.getElementById('o-addr').value.trim();
   if(!n||!p||!a)return alert('Заполните все поля');
   let items=[],tot=0;for(const id in cart){items.push(cart[id]);tot+=cart[id].price*cart[id].qty;}
-  const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:p,order_type:'delivery',address:a,items,total:tot,uid:uid})});
-  if(r.ok){prof={name:n,phone:p,address:a};localStorage.setItem(profKey,JSON.stringify(prof));cart={};go('success');}
-  else alert('Ошибка');
+  try {
+    const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,phone:p,order_type:'delivery',address:a,items,total:tot,uid:uid})});
+    if(r.ok){prof={name:n,phone:p,address:a};localStorage.setItem(profKey,JSON.stringify(prof));cart={};go('success');}
+    else alert('Ошибка сервера');
+  } catch(e) { alert('Нет связи с сервером'); }
 }
 
 function renderProf(){
-  document.getElementById('p-name').innerText=prof.name||t('guest');
-  document.getElementById('p-phone').innerText=prof.phone||t('phoneHint');
+  document.getElementById('p-name').innerText=prof.name||'Гость';
+  document.getElementById('p-phone').innerText=prof.phone||'Укажите номер';
   document.getElementById('p-av').innerText=prof.name?prof.name[0].toUpperCase():'👤';
 }
 
@@ -261,4 +263,34 @@ function saveProf(){
   prof.name=document.getElementById('u-name').value.trim();
   prof.phone=document.getElementById('u-phone').value.trim();
   prof.address=document.getElementById('u-addr').value.trim();
-  localStorage.setItem(profKey,JSON.stri
+  localStorage.setItem(profKey,JSON.stringify(prof));
+  document.getElementById('prof-modal').classList.remove('show');renderProf();
+}
+
+async function loadMyOrders(){
+  try {
+    const r=await fetch('/api/orders');const all=await r.json();
+    const my=all.filter(o=>o.uid==uid);
+    if(my.length===0){document.getElementById('my-orders-list').innerHTML=`<p style="text-align:center;padding:40px;color:var(--m)">У вас пока нет заказов</p>`;return;}
+    document.getElementById('my-orders-list').innerHTML=my.reverse().map(o=>{
+    const st={new:{c:'st-new',t:'Новый'},preparing:{c:'st-preparing',t:'Готовится'},delivering:{c:'st-delivering',t:'В пути'},done:{c:'st-done',t:'Доставлен'}}[o.status||'new'];
+    return `<div class="card" style="display:block;padding:16px;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b>Заказ #${o.id}</b><span class="status-badge ${st.c}">${st.t}</span></div>
+    <div style="font-size:14px;color:var(--m)">${o.items.map(i=>`${i.name} x${i.qty}`).join(', ')}</div>
+    <div style="font-weight:900;color:var(--p);font-size:18px;margin-top:10px">${o.total.toLocaleString()} сум</div>
+    </div>`;}).join('');
+  } catch(e) { document.getElementById('my-orders-list').innerHTML = '<p style="text-align:center;padding:20px">Ошибка загрузки</p>'; }
+}
+
+function openAdmin(){document.getElementById('pass-modal').classList.add('show');document.getElementById('pass').value='';}
+function checkPass(){if(document.getElementById('pass').value===PASS){document.getElementById('pass-modal').classList.remove('show');go('admin');loadAdminOrders();loadAdminMenu();}else alert('Неверный пароль!');}
+function switchTab(t){document.getElementById('admin-orders').style.display=t==='orders'?'block':'none';document.getElementById('admin-menu').style.display=t==='menu'?'block':'none';}
+
+async function loadAdminOrders(){
+  try {
+    const r=await fetch('/api/orders');const o=await r.json();
+    if(o.length===0){document.getElementById('admin-orders').innerHTML='<p style="text-align:center;padding:20px">Заказов нет</p>';return;}
+    document.getElementById('admin-orders').innerHTML=o.reverse().map(x=>{
+    const st={new:{c:'st-new',t:'Новый'},preparing:{c:'st-preparing',t:'Готовится'},delivering:{c:'st-delivering',t:'В пути'},done:{c:'st-done',t:'Доставлен'}}[x.status||'new'];
+    return `<div class="card" style="display:block;padding:16px;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-betw
