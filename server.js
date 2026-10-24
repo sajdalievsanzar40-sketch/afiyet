@@ -12,6 +12,9 @@ const GROUP_ID = process.env.GROUP_ID || '-1004460505310';
 
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
+// Хранилище заказов в памяти
+let orders = [];
+
 // Бот отвечает на кнопки статусов в группе
 bot.on('callback_query', async (query) => {
   const [_, oid, status] = query.data.split(':');
@@ -24,13 +27,13 @@ bot.on('callback_query', async (query) => {
   });
 });
 
-// Вход без базы данных (пускает всех)
+// Вход (просто возвращает роль)
 app.post('/api/login', (req, res) => {
   const { login } = req.body;
   res.json({ token: "test-token", user: { login: login || "admin", role: "admin" } });
 });
 
-// Меню (встроенное)
+// Меню
 app.get('/api/menu', (req, res) => {
   res.json({
     "Донеры": [
@@ -52,6 +55,8 @@ app.post('/api/order', async (req, res) => {
     const { name, phone, order_type, address, items, total } = req.body;
     const orderId = Math.floor(Math.random() * 100000);
     
+    orders.push({ id: orderId, name, phone, order_type, address, items, total, status: 'new' });
+
     const itemsStr = items.map(i => `• ${i.name} x${i.qty} = ${(i.price * i.qty).toLocaleString()} сум`).join('\n');
     const text = `🔔 <b>НОВЫЙ ЗАКАЗ #${orderId}</b>\n\n👤 ${name}\n📞 ${phone}\n🚚 ${order_type === 'delivery' ? 'Доставка' : 'Самовывоз'}\n📍 ${address || '-'}\n\n${itemsStr}\n\n💰 <b>Итого: ${total.toLocaleString()} сум</b>`;
 
@@ -71,6 +76,11 @@ app.post('/api/order', async (req, res) => {
     console.error(e);
     res.status(500).json({ error: e.message });
   }
+});
+
+// Получение заказов для админа
+app.get('/api/orders', (req, res) => {
+  res.json(orders);
 });
 
 app.use(express.static(__dirname));
