@@ -6,171 +6,276 @@
   <title>Afiyet Döner Kebap</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root { --primary: #E85D04; --primary-dark: #C2410C; --primary-soft: #FFF7ED; --bg: #FAF7F2; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B6560; --border: #EDE8E1; --radius: 18px; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
-    .screen { display: none; } .screen.active { display: block; }
-    .topbar { background: var(--card); padding: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    .hero { background: var(--primary); color: white; padding: 20px; border-radius: 0 0 20px 20px; }
-    .hero h1 { font-size: 24px; }
-    .list { padding: 16px; display: grid; gap: 12px; }
-    .card { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .card img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
-    .btn-main { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    .nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: var(--card); display: flex; border-top: 1px solid var(--border); }
-    .nav-item { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--muted); border: none; background: none; cursor: pointer; }
+    :root { --primary: #E85D04; --primary-dark: #C2410C; --bg: #FAF7F2; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B6560; --border: #EDE8E1; --radius: 18px; --shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+    
+    /* АНИМАЦИИ */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    .screen { display: none; } 
+    .screen.active { display: block; animation: fadeUp 0.4s ease forwards; }
+    
+    .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
+    .login-btn { width: 100%; max-width: 300px; padding: 18px; margin: 10px 0; border-radius: 16px; font-size: 18px; font-weight: bold; border: none; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.1s; }
+    .login-btn:active { transform: scale(0.95); }
+    .btn-client { background: var(--primary); color: white; }
+    .btn-admin { background: white; color: var(--primary); border: 2px solid var(--primary); }
+    
+    /* КАРТОЧКИ И МЕНЮ */
+    .hero { background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 22px 20px 28px; border-radius: 0 0 28px 28px; animation: scaleIn 0.5s ease; }
+    .hero h1 { font-size: 24px; font-weight: 800; }
+    .cats { display: flex; gap: 8px; padding: 16px 16px 6px; overflow-x: auto; }
+    .cat { padding: 9px 16px; border-radius: 24px; border: 1.5px solid var(--border); background: var(--card); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+    .cat.on { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+    .list { padding: 10px 16px 20px; display: grid; gap: 12px; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); animation: fadeUp 0.4s ease backwards; }
+    .card img { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; transition: transform 0.3s; }
+    .card img:hover { transform: scale(1.05); }
+    .card-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-name { font-size: 15px; font-weight: 700; }
+    .card-desc { font-size: 12px; color: var(--muted); margin: 3px 0; }
+    .price { font-size: 15px; font-weight: 800; color: var(--primary); }
+    .plus { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 20px; cursor: pointer; transition: transform 0.1s; }
+    .plus:active { transform: scale(0.8); }
+    
+    /* КОРЗИНА */
+    .cart-row { background: var(--card); border-radius: var(--radius); padding: 14px; display: flex; gap: 12px; box-shadow: var(--shadow); margin-bottom: 10px; animation: fadeUp 0.3s ease; }
+    .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--border); background: white; font-size: 16px; cursor: pointer; transition: transform 0.1s; }
+    .qty-btn:active { transform: scale(0.8); }
+    
+    /* ФОРМА */
+    .form { padding: 16px; animation: fadeUp 0.4s ease; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
+    .field input, .field textarea { width: 100%; padding: 14px; border: 1.5px solid var(--border); border-radius: 14px; font-size: 16px; outline: none; transition: border 0.3s; }
+    .field input:focus, .field textarea:focus { border-color: var(--primary); }
+    .btn-main { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.1s; }
+    .btn-main:active { transform: scale(0.95); }
+    
+    /* НАВИГАЦИЯ */
+    .nav { position: fixed; bottom: 0; width: 100%; height: 68px; background: var(--card); border-top: 1px solid var(--border); display: flex; z-index: 100; }
+    .nav-item { flex: 1; display: flex; align-items: center; justify-content: center; border: none; background: none; color: var(--muted); font-weight: 600; transition: color 0.2s; }
     .nav-item.on { color: var(--primary); }
-    .login-box { padding: 40px 20px; text-align: center; }
-    .login-box input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border); }
-    .cart-row { background: var(--card); padding: 14px; border-radius: 12px; display: flex; justify-content: space-between; margin-bottom: 10px; }
+    
+    /* АДМИНКА */
+    .order-card { background: var(--card); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); animation: fadeUp 0.4s ease backwards; }
+    .status { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #FEF3C7; color: #B45309; }
+    .topbar { background: var(--card); padding: 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .back { width: 36px; height: 36px; border: none; background: var(--bg); border-radius: 50%; font-size: 18px; cursor: pointer; }
+    
+    /* МОДАЛКА ПАРОЛЯ */
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 200; }
+    .modal.show { display: flex; animation: fadeUp 0.2s ease; }
+    .modal-box { background: white; padding: 24px; border-radius: 24px; width: 90%; max-width: 340px; text-align: center; animation: scaleIn 0.3s ease; }
   </style>
 </head>
 <body>
   <!-- ЭКРАН ВХОДА -->
   <div id="s-login" class="screen active">
-    <div class="hero" style="text-align:center"><h1>Afiyet Döner</h1><p>Вход в систему</p></div>
-    <div class="login-box">
-      <input type="text" id="auth-login" placeholder="Логин (например, admin)" />
-      <input type="password" id="auth-pass" placeholder="Пароль (Afiyet2026!)" />
-      <button class="btn-main" onclick="doLogin()">Войти</button>
-      <p style="margin-top:10px; font-size:12px; color:var(--muted)">Нет аккаунта? Напишите админу для регистрации.</p>
+    <div class="login-screen">
+      <h1 style="color:var(--primary); font-size: 32px; font-weight: 800; margin-bottom: 5px;">Afiyet Döner</h1>
+      <p style="color:var(--muted); margin-bottom: 40px;">Халяль · 9:00 – 00:00</p>
+      <button class="login-btn btn-client" onclick="login('client')">🛍 Я Клиент</button>
+      <button class="login-btn btn-admin" onclick="openAdminLogin()">👑 Я Администратор</button>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА ПАРОЛЯ -->
+  <div id="pass-modal" class="modal">
+    <div class="modal-box">
+      <h2 style="margin-bottom: 15px;">Вход для Админа</h2>
+      <input type="password" id="admin-pass" placeholder="Введите пароль" style="width:100%; padding:15px; border:2px solid var(--border); border-radius:12px; font-size:18px; text-align:center; margin-bottom:15px; outline:none;" />
+      <button class="btn-main" onclick="checkAdminPass()">Войти</button>
+      <button style="background:none; border:none; color:var(--muted); margin-top:15px; font-size:14px;" onclick="document.getElementById('pass-modal').classList.remove('show')">Отмена</button>
     </div>
   </div>
 
   <!-- МЕНЮ -->
   <div id="s-menu" class="screen">
-    <div class="hero"><h1>Afiyet Döner</h1><p>Халяль · 9:00 – 00:00</p></div>
+    <div class="hero"><h1>Afiyet Döner</h1></div>
+    <div class="cats" id="cats"></div>
     <div class="list" id="menu-list"></div>
   </div>
 
   <!-- КОРЗИНА -->
   <div id="s-cart" class="screen">
-    <div class="topbar"><button class="nav-item" onclick="go('menu')">← Назад</button><h2>Корзина</h2></div>
+    <div class="topbar"><button class="back" onclick="go('menu')">←</button><h2>Корзина</h2></div>
     <div class="list" id="cart-list"></div>
     <div style="padding:16px;">
-      <h3 id="cart-total">Итого: 0 сум</h3>
-      <button class="btn-main" onclick="submitOrder()">Оформить заказ</button>
+      <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:800; margin-bottom:15px;"><span>Итого:</span><span id="cart-total" style="color:var(--primary)">0 сум</span></div>
+      <button class="btn-main" onclick="go('checkout')">Оформить заказ</button>
     </div>
   </div>
 
-  <!-- ПРОФИЛЬ / АДМИН -->
-  <div id="s-profile" class="screen">
-    <div class="topbar"><h2>Профиль</h2></div>
-    <div class="list">
-      <p id="prof-name"></p>
-      <p id="prof-role" style="color:var(--muted); font-size:14px"></p>
-      <button class="btn-main" style="background:#EF4444" onclick="logout()">Выйти</button>
+  <!-- ОФОРМЛЕНИЕ -->
+  <div id="s-checkout" class="screen">
+    <div class="topbar"><button class="back" onclick="go('cart')">←</button><h2>Оформление</h2></div>
+    <div class="form">
+      <div class="field"><label>Имя</label><input type="text" id="order-name" /></div>
+      <div class="field"><label>Телефон</label><input type="tel" id="order-phone" /></div>
+      <div class="field"><label>Адрес</label><textarea id="order-address" rows="2"></textarea></div>
+      <button class="btn-main" onclick="submitOrder()">Подтвердить</button>
     </div>
+  </div>
+
+  <!-- УСПЕХ -->
+  <div id="s-success" class="screen">
+    <div class="login-screen">
+      <h1 style="font-size: 60px; animation: scaleIn 0.5s;">✅</h1>
+      <h2>Заказ принят!</h2>
+      <button class="login-btn btn-client" onclick="go('menu')" style="margin-top:20px;">В меню</button>
+    </div>
+  </div>
+
+  <!-- АДМИНКА -->
+  <div id="s-admin" class="screen">
+    <div class="topbar"><button class="back" onclick="go('login')">←</button><h2>Заказы</h2></div>
+    <div class="list" id="admin-orders"></div>
   </div>
 
   <!-- НАВИГАЦИЯ -->
-  <nav class="nav" id="nav" style="display:none">
+  <nav class="nav" id="nav" style="display:none;">
     <button class="nav-item" onclick="go('menu')">🍽 Меню</button>
     <button class="nav-item" onclick="go('cart')">🛒 Корзина</button>
-    <button class="nav-item" onclick="go('profile')">👤 Профиль</button>
   </nav>
 
   <script>
-    const API = window.location.origin + '/api';
-    let token = localStorage.getItem('token');
     let cart = {};
     let menuData = {};
+    let currentCat = '';
+    const ADMIN_PASSWORD = "Afiyet2026!";
 
-    async function api(path, method='GET', body=null) {
-      const headers = { 'Content-Type': 'application/json' };
-      if(token) headers['Authorization'] = 'Bearer ' + token;
-      const res = await fetch(API + path, { method, headers, body: body ? JSON.stringify(body) : null });
-      if(!res.ok) { const err = await res.json(); throw new Error(err.detail || 'Ошибка'); }
-      return res.json();
+    function openAdminLogin() {
+      document.getElementById('pass-modal').classList.add('show');
+      document.getElementById('admin-pass').value = '';
     }
 
-    async function doLogin() {
-      const login = document.getElementById('auth-login').value;
-      const password = document.getElementById('auth-pass').value;
-      try {
-        const data = await api('/login', 'POST', { login, password });
-        token = data.token; localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        initApp();
-      } catch(e) { alert(e.message); }
-    }
-
-    function logout() { localStorage.clear(); location.reload(); }
-
-    async function initApp() {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if(!user) { go('login'); return; }
-      document.getElementById('nav').style.display = 'flex';
-      document.getElementById('prof-name').innerText = user.login;
-      document.getElementById('prof-role').innerText = user.role === 'admin' ? 'Администратор' : 'Клиент';
-      await loadMenu();
-      go('menu');
-    }
-
-    async function loadMenu() {
-      try {
-        menuData = await api('/menu');
-        let html = '';
-        for(const [cat, items] of Object.entries(menuData)) {
-          html += `<h3 style="grid-column: 1/-1; margin-top:10px; color:var(--primary)">${cat}</h3>`;
-          items.forEach(i => {
-            html += `<div class="card"><img src="${i.img}"><div>
-              <div style="font-weight:bold">${i.name_ru}</div>
-              <div style="color:var(--muted); font-size:12px; margin:4px 0">${i.desc_ru || ''}</div>
-              <div style="font-weight:bold; color:var(--primary)">${i.price.toLocaleString()} сум</div>
-              <button style="margin-top:5px; background:var(--primary); color:white; border:none; padding:5px 10px; border-radius:8px" onclick="addToCart(${i.id}, '${i.name_ru.replace(/'/g, "")}', ${i.price})">+</button>
-            </div></div>`;
-          });
-        }
-        document.getElementById('menu-list').innerHTML = html;
-      } catch(e) { alert(e.message); }
-    }
-
-    function addToCart(id, name, price) {
-      if(!cart[id]) cart[id] = { name, price, qty: 0 };
-      cart[id].qty++;
-      renderCart();
-    }
-
-    function renderCart() {
-      let html = '', total = 0;
-      for(const id in cart) {
-        const i = cart[id]; total += i.price * i.qty;
-        html += `<div class="cart-row"><div><div style="font-weight:bold">${i.name}</div><div>${i.price} сум</div></div>
-        <div style="display:flex; gap:10px; align-items:center"><button onclick="changeQty(${id},-1)">-</button><b>${i.qty}</b><button onclick="changeQty(${id},1)">+</button></div></div>`;
+    function checkAdminPass() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === ADMIN_PASSWORD) {
+        document.getElementById('pass-modal').classList.remove('show');
+        login('admin');
+      } else {
+        alert('Неверный пароль!');
       }
-      document.getElementById('cart-list').innerHTML = html || '<p style="text-align:center; padding:20px">Пусто</p>';
-      document.getElementById('cart-total').innerText = 'Итого: ' + total.toLocaleString() + ' сум';
     }
 
-    function changeQty(id, d) {
-      if(!cart[id]) return;
-      cart[id].qty += d;
-      if(cart[id].qty <= 0) delete cart[id];
-      renderCart();
-    }
-
-    async function submitOrder() {
-      if(Object.keys(cart).length === 0) return alert('Корзина пуста');
-      const user = JSON.parse(localStorage.getItem('user'));
-      const items = [];
-      let total = 0;
-      for(const id in cart) { items.push(cart[id]); total += cart[id].price * cart[id].qty; }
-      
-      try {
-        await api('/order', 'POST', { name: user.login, phone: "+998", order_type: "delivery", address: "Указать при звонке", items, total });
-        alert('Заказ отправлен!');
-        cart = {}; renderCart(); go('menu');
-      } catch(e) { alert(e.message); }
+    function login(role) {
+      document.getElementById('nav').style.display = 'flex';
+      if (role === 'admin') {
+        go('admin');
+        loadAdminOrders();
+      } else {
+        go('menu');
+        loadMenu();
+      }
     }
 
     function go(screen) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const el = document.getElementById('s-' + screen);
-      if(el) el.classList.add('active');
+      document.getElementById('s-' + screen).classList.add('active');
+      if (screen === 'cart') renderCart();
     }
 
-    if(token) initApp(); else go('login');
+    async function loadMenu() {
+      const res = await fetch('/api/menu');
+      menuData = await res.json();
+      currentCat = Object.keys(menuData)[0];
+      renderCats();
+      renderMenu();
+    }
+
+    function renderCats() {
+      document.getElementById('cats').innerHTML = Object.keys(menuData).map(c => 
+        `<button class="cat ${c === currentCat ? 'on' : ''}" onclick="selectCat('${c}')">${c}</button>`
+      ).join('');
+    }
+
+    function selectCat(c) { currentCat = c; renderCats(); renderMenu(); }
+
+    function renderMenu() {
+      const items = menuData[currentCat] || [];
+      document.getElementById('menu-list').innerHTML = items.map((item, index) => `
+        <div class="card" style="animation-delay: ${index * 0.1}s">
+          <img src="${item.img}" />
+          <div class="card-body">
+            <div><div class="card-name">${item.name_ru}</div><div class="card-desc">${item.desc_ru || ''}</div></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+              <span class="price">${item.price.toLocaleString()} сум</span>
+              <button class="plus" onclick="add(${item.id}, '${item.name_ru}', ${item.price})">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function add(id, name, price) {
+      if (!cart[id]) cart[id] = { name, price, qty: 0 };
+      cart[id].qty++;
+      alert('Добавлено: ' + name);
+    }
+
+    function renderCart() {
+      let html = '', total = 0;
+      for (const id in cart) {
+        const i = cart[id]; total += i.price * i.qty;
+        html += `<div class="cart-row"><div style="flex:1;"><div style="font-weight:bold">${i.name}</div><div class="price">${i.price.toLocaleString()} сум</div>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+            <button class="qty-btn" onclick="changeQty(${id},-1)">-</button><b>${i.qty}</b><button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+          </div></div></div>`;
+      }
+      document.getElementById('cart-list').innerHTML = html || '<p style="text-align:center; padding:20px;">Пусто</p>';
+      document.getElementById('cart-total').innerText = total.toLocaleString() + ' сум';
+    }
+
+    function changeQty(id, d) {
+      if (!cart[id]) return;
+      cart[id].qty += d;
+      if (cart[id].qty <= 0) delete cart[id];
+      renderCart();
+    }
+
+    async function submitOrder() {
+      const name = document.getElementById('order-name').value.trim();
+      const phone = document.getElementById('order-phone').value.trim();
+      const address = document.getElementById('order-address').value.trim();
+      if (!name || !phone) return alert('Введите имя и телефон');
+      if (Object.keys(cart).length === 0) return alert('Корзина пуста');
+
+      const items = [];
+      let total = 0;
+      for (const id in cart) { items.push(cart[id]); total += cart[id].price * cart[id].qty; }
+
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, order_type: 'delivery', address, items, total })
+      });
+
+      if (res.ok) { cart = {}; go('success'); }
+      else { alert('Ошибка'); }
+    }
+
+    async function loadAdminOrders() {
+      const res = await fetch('/api/orders');
+      const orders = await res.json();
+      if (orders.length === 0) {
+        document.getElementById('admin-orders').innerHTML = '<p style="text-align:center; padding:20px; color:var(--muted);">Заказов пока нет</p>';
+        return;
+      }
+      document.getElementById('admin-orders').innerHTML = orders.reverse().map((o, index) => `
+        <div class="order-card" style="animation-delay: ${index * 0.1}s">
+          <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <b>#${o.id}</b><span class="status">Новый</span>
+          </div>
+          <div>👤 ${o.name}</div>
+          <div>📞 ${o.phone}</div>
+          <div>📍 ${o.address}</div>
+          <div style="margin-top:10px; font-weight:bold; color:var(--primary);">${o.total.toLocaleString()} сум</div>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
 </html>
