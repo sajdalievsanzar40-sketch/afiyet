@@ -131,8 +131,8 @@ body{background:var(--bg);color:var(--t);padding-bottom:90px;overflow-x:hidden}
 <button class="ni" data-tab="profile" onclick="go('profile')"><span class="nicon">👤</span>Профиль</button>
 </nav>
 <script>
-// Базовые товары на случай, если сервер не ответит
-const defaultMenu = {
+// Резервное меню, если сервер спит
+const backupMenu = {
   "Донеры": [
     { id: 1, name_ru: "Донер Кебаб", desc_ru: "Сочный донер", price: 45000, img: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=400" },
     { id: 2, name_ru: "Донер Бургер", desc_ru: "Люля и сюзьма", price: 50000, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" }
@@ -154,15 +154,21 @@ let lang = localStorage.getItem('lang_'+uid) || 'ru';
 let cart={}, menuData={}, cat='', prof=JSON.parse(localStorage.getItem(profKey))||{name:'',phone:'',address:''};
 const PASS="Afiyet2026!";
 
+// ФУНКЦИЯ ЗАГРУЗКИ С ЗАЩИТОЙ ОТ ЗАВИСАНИЯ
 async function loadMenu(){
   try {
-    const r = await fetch('/api/menu'); 
-    if(!r.ok) throw new Error('Сервер не ответил');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // Ждем 3 секунды
+    
+    const r = await fetch('/api/menu', { signal: controller.signal }); 
+    clearTimeout(timeoutId);
+    
+    if(!r.ok) throw new Error('Ошибка сервера');
     menuData = await r.json(); 
-    if(!menuData || Object.keys(menuData).length === 0) menuData = defaultMenu;
+    if(!menuData || Object.keys(menuData).length === 0) throw new Error('Пустое меню');
   } catch(e) {
-    console.warn("Сервер недоступен, грузим базовое меню", e);
-    menuData = defaultMenu;
+    console.log("Сервер молчит или спит. Включаем резервное меню.");
+    menuData = backupMenu; // Если сервер не ответил, показываем базовое меню
   }
   cat = Object.keys(menuData)[0]; 
   renderCats(); 
@@ -291,6 +297,4 @@ async function loadAdminOrders(){
     const r=await fetch('/api/orders');const o=await r.json();
     if(o.length===0){document.getElementById('admin-orders').innerHTML='<p style="text-align:center;padding:20px">Заказов нет</p>';return;}
     document.getElementById('admin-orders').innerHTML=o.reverse().map(x=>{
-    const st={new:{c:'st-new',t:'Новый'},preparing:{c:'st-preparing',t:'Готовится'},delivering:{c:'st-delivering',t:'В пути'},done:{c:'st-done',t:'Доставлен'}}[x.status||'new'];
-    return `<div class="card" style="display:block;padding:16px;margin-bottom:10px">
-    <div style="display:flex;justify-content:space-betw
+    const st={new:{c:'st-new',t
