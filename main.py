@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from jose import jwt, JWTError
-from passlib.context import CryptContext
+import bcrypt
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from dotenv import load_dotenv
@@ -19,7 +19,6 @@ SECRET_KEY = os.getenv("SECRET_KEY", "super_secret_key_123")
 ADMIN_LOGIN = os.getenv("ADMIN_LOGIN", "admin")
 ADMIN_PASS = os.getenv("ADMIN_PASS", "Afiyet2026!")
 
-pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 DB_PATH = "afiyet.db"
 ALGO = "HS256"
 
@@ -54,7 +53,8 @@ def init_db():
     conn.commit()
     row = c.execute("SELECT id FROM users WHERE login=?", (ADMIN_LOGIN,)).fetchone()
     if not row:
-        c.execute("INSERT INTO users (login,password_hash,role) VALUES (?,?,?)", (ADMIN_LOGIN, pwd_ctx.hash(ADMIN_PASS), "admin"))
+        hashed = bcrypt.hashpw(ADMIN_PASS.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        c.execute("INSERT INTO users (login,password_hash,role) VALUES (?,?,?)", (ADMIN_LOGIN, hashed, "admin"))
         conn.commit()
     n = c.execute("SELECT COUNT(*) FROM menu").fetchone()[0]
     if n == 0:
@@ -123,7 +123,7 @@ def current_user(authorization: str = Header(None)):
 @app.post("/api/login")
 def login(req: AuthReq):
     conn = get_conn(); r = conn.execute("SELECT * FROM users WHERE login=?", (req.login,)).fetchone(); conn.close()
-    if r and pwd_ctx.verify(req.password, r["password_hash"]):
+    if r and bcrypt.checkpw(req.password.encode('utf-8'), r["password_hash"].encode('utf-8')):
         u = {"id": r["id"], "login": r["login"], "role": r["role"]}
         return {"token": make_token(u), "user": u}
     raise HTTPException(401, "Неверный логин или пароль")
